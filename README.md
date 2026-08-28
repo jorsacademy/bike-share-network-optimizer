@@ -1,6 +1,6 @@
 # Bike Share Network Optimizer
 
-A Python model for planning and evaluating bike-share networks. It supports station placement scoring, rider-flow estimation, transit integration analysis, fleet-mix recommendations, and dock-capacity recommendations.
+A Python package for planning and evaluating bike-share networks. It supports station placement scoring, rider-flow estimation, transit integration analysis, fleet-mix recommendations, and dock-capacity recommendations.
 
 ## Features
 
@@ -12,7 +12,34 @@ A Python model for planning and evaluating bike-share networks. It supports stat
 - Candidate station ranking using POI, equity, and distance factors
 - E-bike vs. regular-bike fleet-mix recommendations
 - Station capacity recommendations based on modeled inflow/outflow
-- Reproducible demo dataset
+- Reproducible synthetic demo data
+- Automated tests and GitHub Actions CI
+
+## Project structure
+
+```text
+bike-share-network-optimizer/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── src/
+│   └── bike_share_optimizer/
+│       ├── __init__.py
+│       ├── __main__.py
+│       ├── demo.py
+│       └── optimizer.py
+├── tests/
+│   └── test_optimizer.py
+├── .gitignore
+├── LICENSE
+├── README.md
+├── bike_share_optimizer.py
+├── pyproject.toml
+├── requirements-dev.txt
+└── requirements.txt
+```
+
+The root `bike_share_optimizer.py` file is retained as a compatibility entry point. The reusable implementation lives under `src/bike_share_optimizer/`.
 
 ## Requirements
 
@@ -20,19 +47,41 @@ A Python model for planning and evaluating bike-share networks. It supports stat
 - NumPy
 - pandas
 
-Install dependencies:
+## Installation
+
+For normal use:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -e .
+```
+
+For development, testing, coverage, and linting:
+
+```bash
+python -m pip install -e ".[dev]"
+```
+
+You can also install the pinned minimum runtime dependencies with:
+
+```bash
+python -m pip install -r requirements.txt
 ```
 
 ## Run the demo
+
+Preferred package entry point:
+
+```bash
+python -m bike_share_optimizer
+```
+
+The compatibility script also remains available:
 
 ```bash
 python bike_share_optimizer.py
 ```
 
-The script creates synthetic station, trip, and transit data, builds the demand and flow models, and prints recommended new stations, fleet mix, and station capacities.
+The demo creates synthetic station, trip, and transit data, builds the demand and flow models, and prints recommended new stations, fleet mix, and station capacities.
 
 ## Basic usage
 
@@ -48,6 +97,35 @@ new_stations = optimizer.optimize_new_stations(num_stations=5, equity_weight=0.6
 fleet_mix = optimizer.optimize_fleet_mix(total_bikes=1000)
 capacity = optimizer.recommend_station_capacity()
 ```
+
+## Testing
+
+Run the test suite:
+
+```bash
+pytest
+```
+
+Run with coverage:
+
+```bash
+pytest --cov=bike_share_optimizer --cov-report=term-missing
+```
+
+Run the linter:
+
+```bash
+ruff check src tests bike_share_optimizer.py
+```
+
+## Continuous integration
+
+GitHub Actions runs on every push to `main` and on pull requests targeting `main`. The CI matrix tests Python 3.9, 3.10, 3.11, and 3.12 and performs:
+
+1. Package installation with development dependencies
+2. Ruff lint checks
+3. Pytest unit tests with coverage
+4. A package-entry-point smoke test
 
 ## Expected data columns
 
@@ -81,6 +159,10 @@ capacity = optimizer.recommend_station_capacity()
 - `type`
 - `ridership`
 
-## Notes
+## Development status
 
-This repository is a planning-model prototype. The built-in POI scoring method generates demonstration values when an external POI dataset is unavailable. For production use, replace synthetic/demo inputs with validated operational, demographic, transit, and POI datasets.
+This repository is a planning-model prototype. The built-in POI scoring method generates demonstration values when an external POI dataset is unavailable. Production use should replace synthetic/demo inputs with validated operational, demographic, transit, and POI datasets.
+
+## License
+
+Released under the MIT License. See `LICENSE` for details.
