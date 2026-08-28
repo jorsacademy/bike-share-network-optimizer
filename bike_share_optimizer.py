@@ -1,7 +1,7 @@
-"""Backward-compatible entry point for the packaged project."""
+"""Backward-compatible entry point for running the project from the repository root."""
 
-from bike_share_optimizer import BikeShareOptimizer
-from bike_share_optimizer.demo import build_demo_data, main
+from src.bike_share_optimizer import BikeShareOptimizer
+from src.bike_share_optimizer.demo import build_demo_data, main
 
 __all__ = ["BikeShareOptimizer", "build_demo_data"]
 
