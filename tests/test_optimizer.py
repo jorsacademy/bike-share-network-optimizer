@@ -43,7 +43,8 @@ def trip_data():
 
 
 def test_haversine_distance_is_zero_for_same_point():
-    assert BikeShareOptimizer._haversine_distance(40.75, -73.99, 40.75, -73.99) == pytest.approx(0.0)
+    distance = BikeShareOptimizer._haversine_distance(40.75, -73.99, 40.75, -73.99)
+    assert distance == pytest.approx(0.0)
 
 
 def test_haversine_distance_is_reasonable_for_one_degree_latitude():
@@ -51,7 +52,9 @@ def test_haversine_distance_is_reasonable_for_one_degree_latitude():
     assert distance == pytest.approx(111.19, rel=0.01)
 
 
-def test_build_demand_model_counts_starting_trips(existing_stations, potential_locations, trip_data):
+def test_build_demand_model_counts_starting_trips(
+    existing_stations, potential_locations, trip_data
+):
     optimizer = BikeShareOptimizer(existing_stations, potential_locations)
     optimizer.load_data(trip_data=trip_data)
 
@@ -61,7 +64,9 @@ def test_build_demand_model_counts_starting_trips(existing_stations, potential_l
     assert demand["S2"] == 1
 
 
-def test_predict_rider_flow_preserves_historical_counts(existing_stations, potential_locations, trip_data):
+def test_predict_rider_flow_preserves_historical_counts(
+    existing_stations, potential_locations, trip_data
+):
     optimizer = BikeShareOptimizer(existing_stations, potential_locations)
     optimizer.load_data(trip_data=trip_data)
 
@@ -72,7 +77,9 @@ def test_predict_rider_flow_preserves_historical_counts(existing_stations, poten
     assert flow.loc["S2", "S1"] == 1
 
 
-def test_new_station_flow_is_positive_and_symmetric(existing_stations, potential_locations, trip_data):
+def test_new_station_flow_is_positive_and_symmetric(
+    existing_stations, potential_locations, trip_data
+):
     optimizer = BikeShareOptimizer(existing_stations, potential_locations)
     optimizer.load_data(trip_data=trip_data)
     optimizer.build_demand_model()
@@ -123,7 +130,9 @@ def test_optimize_fleet_mix_preserves_total(existing_stations, potential_locatio
     assert 0 <= mix["e_bike_percentage"] <= 100
 
 
-def test_recommend_station_capacity_has_minimum_ten(existing_stations, potential_locations, trip_data):
+def test_recommend_station_capacity_has_minimum_ten(
+    existing_stations, potential_locations, trip_data
+):
     optimizer = BikeShareOptimizer(existing_stations, potential_locations)
     optimizer.load_data(trip_data=trip_data)
     optimizer.predict_rider_flow()
